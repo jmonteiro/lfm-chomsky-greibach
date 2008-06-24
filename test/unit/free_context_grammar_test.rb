@@ -16,7 +16,7 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     end
 
     should "get the start production" do
-      assert_equal @fcg.start_productions, ["E+E", "E*E", "[E]", "x"]
+      assert_equal @fcg.start_productions.sort, ["E+E", "E*E", "[E]", "x"].sort
     end
   end
 end

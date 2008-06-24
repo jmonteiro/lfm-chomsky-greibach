@@ -13,7 +13,7 @@ class FreeContextGrammar
   end
 
   def to_cnf
-     
+     ChomskyNormalForm.from_fcg(self)
   end
 end
 
