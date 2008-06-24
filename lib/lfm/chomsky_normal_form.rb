@@ -1,5 +1,3 @@
-require 'free_context_grammar'
-
 class ChomskyNormalForm < FreeContextGrammar
 
   def initialize(v, t, p, s)
@@ -14,4 +12,3 @@ class ChomskyNormalForm < FreeContextGrammar
     end
   end
 end
-

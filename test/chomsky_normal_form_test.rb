@@ -1,8 +1,4 @@
-require 'test/unit'
-require 'rubygems'
-require 'shoulda'
-require File.dirname(__FILE__) + '/../../lib/free_context_grammar'
-require File.dirname(__FILE__) + '/../../lib/chomsky_normal_form'
+require File.expand_path(File.dirname(__FILE__) + "/test_helper")
 
 class ChomskyNormalFormTest < Test::Unit::TestCase
 
@@ -23,7 +19,10 @@ class ChomskyNormalFormTest < Test::Unit::TestCase
       cnf = ChomskyNormalForm.new(
         ['A', 'B'],
         ['a', 'b', 'c'],
-        { 'A' => ['AB', 'B'], 'B' => ['a'] },
+        {
+          'A' => ['AB', 'B'],
+          'B' => ['a']
+        },
         'A'
       )
       assert cnf.valid?

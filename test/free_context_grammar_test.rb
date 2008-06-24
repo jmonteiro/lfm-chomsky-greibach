@@ -1,7 +1,4 @@
-require 'test/unit'
-require 'rubygems'
-require 'shoulda'
-require File.dirname(__FILE__) + '/../../lib/free_context_grammar'
+require File.expand_path(File.dirname(__FILE__) + "/test_helper")
 
 class FreeContextGrammarTest < Test::Unit::TestCase
   context "The first free context grammar example" do

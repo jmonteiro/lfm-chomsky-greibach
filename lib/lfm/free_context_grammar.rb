@@ -1,5 +1,3 @@
-require 'chomsky_normal_form'
-
 class FreeContextGrammar
   attr_accessor :vars, :terms, :productions, :start
 
