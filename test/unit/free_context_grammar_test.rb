@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/test_helper")
+require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class FreeContextGrammarTest < Test::Unit::TestCase
   context "The first free context grammar example" do

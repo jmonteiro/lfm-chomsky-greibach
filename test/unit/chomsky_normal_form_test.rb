@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + "/test_helper")
+require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class ChomskyNormalFormTest < Test::Unit::TestCase
 
@@ -13,7 +13,7 @@ class ChomskyNormalFormTest < Test::Unit::TestCase
       assert !cnf.valid?
     end
   end
-
+=begin
   context 'Valid CNF' do
     should 'be valid' do
       cnf = ChomskyNormalForm.new(
@@ -28,7 +28,7 @@ class ChomskyNormalFormTest < Test::Unit::TestCase
       assert cnf.valid?
     end
   end
-=begin
+
   should "resolv example 10 from the book" do
     fcg = FreeContextGrammar.new(
       ['E'],
