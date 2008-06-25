@@ -1,5 +1,5 @@
 class FreeContextGrammar
-  attr_accessor :vars, :terms, :productions, :start
+  attr_accessor :terms, :productions, :start
 
   def initialize(v, t, p, s)
     @vars = v # ['E']
@@ -12,39 +12,54 @@ class FreeContextGrammar
     productions[start]
   end
   
-  def next_letter_avaliable
+  # Returns the next var avaliable
+  def new_var
     ('A'..'Z').to_a.each do |letter|
       return letter unless vars.include?(letter)
     end
   end
   
-  def add_next_letter_avaliable
-    next_letter = next_letter_avaliable
-    vars << next_letter
-    next_letter
-  end
-  
   def vars_to_the_right_side
-    letters = {}
-    terms.each do |t|
-      letters.merge({add_next_letter_avaliable => t})
-    end
-    
-    new_productions = letters
-    productions.each do |k, v|
-      new_productions[k] = v.collect do |content|
-        content = substitute_from_dictionary(letters, content)
+    productions.each do |var, rule|
+      if rule.size <= 2
+        
       end
     end
-    productions = new_productions
     
     self
+  end
+  
+  def find_var_by_term(q)
+    productions.each do |var, term|
+      return var if term == q
+    end
+    return false
+  end 
+
+  def find_or_create_var_by_term(q)
+    unless v = find_var_by_term(q)
+      v = new_var
+      productions[v] = q
+    end
+    return v
   end
 
   def to_cnf
     ChomskyNormalForm.from_fcg(self)
   end
+
+  def is_a_var?(q)
+    vars.include?(q)
+  end
   
+  def is_a_term?(q)
+    terms.include?(q)
+  end
+
+  def vars
+    productions.keys
+  end
+
   protected
   def substitute_from_dictionary(dic, string)
     dic.each { |k, v| string.gsub!(v, k) }

@@ -20,15 +20,7 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     end
     
     should "find the next letter avaliable to variable" do
-      assert_equal "A", @fcg.next_letter_avaliable
-      
-      @fcg.vars << @fcg.next_letter_avaliable
-      assert_equal "B", @fcg.next_letter_avaliable
-    end
-    
-    should "accept one more variable" do
-      @fcg.add_next_letter_avaliable
-      assert_equal "B", @fcg.next_letter_avaliable
+      assert_equal "A", @fcg.new_var
     end
     
     should "convert vars to the right side" do
@@ -36,10 +28,32 @@ class FreeContextGrammarTest < Test::Unit::TestCase
       assert_equal ["E", "A", "B", "C", "D", "F"].sort, @fcg.vars.sort
       assert_equal ["EAE", "EBE", "ECE", "DED", "F"].sort, @fcg.productions["E"].sort
     end
+
+    should "find the right variable for a given term" do
+      l = @fcg.new_var
+      @fcg.terms << "z"
+      @fcg.productions[l] = "z"
+      assert_equal l, @fcg.find_var_by_term("z")
+    end
+
+    should "find or create the right variable for a given term" do
+      l = @fcg.new_var
+      assert_equal l, @fcg.find_or_create_var_by_term("z")
+    end
+    
+    should "know if it is a var" do
+      assert @fcg.is_a_var?("E")
+      assert !@fcg.is_a_var?("*")
+    end
+
+    should "know if it is a term" do
+      assert @fcg.is_a_term?("*")
+      assert !@fcg.is_a_term?("E")
+    end
   end
   
   should "substitute term with var from dictionary" do
-    fcg = FreeContextGrammarTest.new
+    fcg = FreeContextGrammar.new [], [], {}, ''
     assert_equal "ACB", fcg.send("substitute_from_dictionary", {"A" => "x", "B" => "y"}, "xCy")
   end
 end
