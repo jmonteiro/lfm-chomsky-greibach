@@ -22,7 +22,9 @@ class FreeContextGrammar
   def vars_to_the_right_side
     productions.each do |var, rule|
       if rule.size <= 2
-        
+        rule.split('').each do |l|
+          productions[var].gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l)
+        end
       end
     end
     
