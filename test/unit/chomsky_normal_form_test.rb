@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class ChomskyNormalFormTest < Test::Unit::TestCase
-  context "First FreeContextGrammar example" do
+  context "Primitive FreeContextGrammar" do
     setup do
       @fcg = FreeContextGrammar.new(
         ['E'],
@@ -15,8 +15,8 @@ class ChomskyNormalFormTest < Test::Unit::TestCase
       assert @fcg.to_cnf
     end
 
-    should "convert and be as expected" do
-      cnf = @fcg.clone.to_cnf
+    should "convert to ChomskyNormalForm and be as expected" do
+      cnf = @fcg.to_cnf
 
       cnf_expected = ChomskyNormalForm.new(
         ['E', 'A', 'B', 'C', 'D', 'F', 'G', 'H'],
