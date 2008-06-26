@@ -1,0 +1,10 @@
+# Chomsky and Greibach Normal Forms
+
+## How to use it
+
+Take a look at test/unit/chomsky_normal_form_test.rb.
+
+## How to test it
+
+    gem install Shoulda rcov
+    rake test
