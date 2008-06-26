@@ -33,7 +33,7 @@ class FreeContextGrammar
     
     self
   end
-  
+
   def find_var_by_term(q)
     productions.each do |var, term|
       return var if term == q
@@ -63,11 +63,5 @@ class FreeContextGrammar
 
   def vars
     productions.keys
-  end
-
-  protected
-  def substitute_from_dictionary(dic, string)
-    dic.each { |k, v| string.gsub!(v, k) }
-    string
   end
 end

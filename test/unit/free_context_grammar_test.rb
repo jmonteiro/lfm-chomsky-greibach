@@ -51,10 +51,5 @@ class FreeContextGrammarTest < Test::Unit::TestCase
       assert !@fcg.is_a_term?("E")
     end
   end
-  
-  should "substitute term with var from dictionary" do
-    fcg = FreeContextGrammar.new [], [], {}, ''
-    assert_equal "ACB", fcg.send("substitute_from_dictionary", {"A" => "x", "B" => "y"}, "xCy")
-  end
 end
 
