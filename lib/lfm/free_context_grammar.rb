@@ -20,21 +20,19 @@ class FreeContextGrammar
   end
   
   def vars_to_the_right_in_production
-    for_each_rule(:min => 2) do |rule|
-      rule.split('').each do |l|
-        rule.gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l)
-      end
+    each_rule(:min => 2) do |rule|
+      rule.each_letter { |l| rule.gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l) }
     end
   end
 
   def max_last_two_vars_in_productions
-    for_each_rule(:min => 3) do |rule|
+    each_rule(:min => 3) do |rule|
       
     end
   end
 
   # TODO rewrite in a Ruby way (clean code)
-  def for_each_rule(options = {})
+  def each_rule(options = {})
     options[:min] ||= 2
 
     vars.each do |var|
@@ -77,3 +75,4 @@ class FreeContextGrammar
     productions.keys
   end
 end
+
