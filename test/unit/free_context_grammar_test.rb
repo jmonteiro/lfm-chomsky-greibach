@@ -70,19 +70,34 @@ class FreeContextGrammarTest < Test::Unit::TestCase
 
     should "transform tripe-rules productions with, at maximum, two vars each" do
       @fcg.max_last_two_vars_in_productions
-      productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x"], "F"=>"AE", "G"=>"BE", "H"=>"ED"}
+      productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x"], "F"=>["AE"], "G"=>["BE"], "H"=>["ED"]}
 
       assert_equal productions_expected, @fcg.productions
     end
+  end
 
-    should "transform quintuple-rules productions with, at maximum, two vars each" do
-      @fcg.productions["E"] << "CEAD"
-      @fcg.max_last_two_vars_in_productions
-      productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x", "CI"], "F"=>"AE", "G"=>"BE", "H"=>"ED", "I" => "EJ", "J" => "AD"}
-
-      #assert_equal productions_expected.keys.sort, @fcg.vars.sort
-      assert_equal productions_expected, @fcg.productions
+  context "FreeContextGrammar with quadruple rule after vars_to_the_right_in_productions" do
+    setup do
+      @fcg = FreeContextGrammar.new(
+        ['E', 'A', 'B', 'C', 'D'],
+        ['+', '*', '[', ']', 'x'],
+        {
+          'E' => ["EAE", "EBE", "CED", "x", "CEAD"],
+          'A' => ['+'],
+          'B' => ['*'],
+          'C' => ['['],
+          'D' => [']']
+        },
+        'E'
+      )
     end
+
+    #should "transform quintuple-rules productions with, at maximum, two vars each" do
+    #  @fcg.max_last_two_vars_in_productions
+    #  productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x", "CI"], "F"=>["AE"], "G"=>["BE"], "H"=>["ED"], "I" => ["EJ"], "J" => ["AD"]}
+
+    #  assert_equal productions_expected, @fcg.productions
+    #end
   end
 end
 

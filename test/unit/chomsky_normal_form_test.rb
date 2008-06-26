@@ -14,24 +14,27 @@ class ChomskyNormalFormTest < Test::Unit::TestCase
     should "accept convertion to ChomskyNormalForm" do
       assert @fcg.to_cnf
     end
-=begin
+
     should "convert and be as expected" do
       cnf = @fcg.clone.to_cnf
 
       cnf_expected = ChomskyNormalForm.new(
-        ['E', 'C+', 'C*', 'C[', 'C]', 'D1', 'D2', 'D3'],
+        ['E', 'A', 'B', 'C', 'D', 'F', 'G', 'H'],
         ['+', '*', '[', ']', 'x'],
         {
-          'E' => ['ED1', 'ED2', 'C[D3', 'x'],
-          'D1' => ['C+E'], 'D2' => ['C*E'], 'D3' => ['EC]'],
-          'C+' => ['+'], 'C*' => ['*'], 'C[' => ['['], 'C]' => [']']
+          "A"=>["+"],
+          "B"=>["*"],
+          "C"=>["["],
+          "D"=>["]"],
+          "E"=>["EF", "EG", "CH", "x"],
+          "F"=>["AE"],
+          "G"=>["BE"],
+          "H"=>["ED"]
         },
         'E'
       )
     
-      assert_equal cnf_expected.productions.keys.sort, cnf.productions.keys.sort
-      assert_equal cnf_expected.productions.values.sort, cnf.productions.values.sort
+      assert_equal cnf_expected.productions, cnf.productions
     end
-=end
   end
 end

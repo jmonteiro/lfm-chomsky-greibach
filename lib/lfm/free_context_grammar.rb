@@ -48,7 +48,7 @@ class FreeContextGrammar
 
   def find_var_by_content(q)
     productions.each do |var, content|
-      return var if content == q
+      return var if content[0] == q or content == q
     end
     return false
   end 
@@ -56,7 +56,7 @@ class FreeContextGrammar
   def find_or_create_var_by_content(q)
     unless v = find_var_by_content(q)
       v = new_var
-      productions[v] = q
+      productions[v] = [q]
     end
     return v
   end
