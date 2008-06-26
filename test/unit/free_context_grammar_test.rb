@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class FreeContextGrammarTest < Test::Unit::TestCase
-  context "Simple FreeContextGrammar example" do
+  context "Primitive FreeContextGrammar" do
     setup do
       @fcg = FreeContextGrammar.new(
         ['E'],
@@ -27,12 +27,12 @@ class FreeContextGrammarTest < Test::Unit::TestCase
       l = @fcg.new_var
       @fcg.terms << "z"
       @fcg.productions[l] = "z"
-      assert_equal l, @fcg.find_var_by_term("z")
+      assert_equal l, @fcg.find_var_by_content("z")
     end
 
     should "find or create the right variable for a given term" do
       l = @fcg.new_var
-      assert_equal l, @fcg.find_or_create_var_by_term("z")
+      assert_equal l, @fcg.find_or_create_var_by_content("z")
     end
     
     should "know if it is a var" do
@@ -52,7 +52,7 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     end
   end
 
-  context "Simple FreeContextGrammar example" do
+  context "FreeContextGrammar after vars_to_the_right_in_productions" do
     setup do
       @fcg = FreeContextGrammar.new(
         ['E', 'A', 'B', 'C', 'D'],
@@ -68,11 +68,21 @@ class FreeContextGrammarTest < Test::Unit::TestCase
       )
     end
 
-    #should "convert vars to the right side" do
-    #  @fcg.max_last_two_vars_in_productions
-    #  assert_equal ["E", "A", "B", "C", "D", "F", "G", "H"].sort, @fcg.vars.sort
-    #  assert_equal ["EF", "EG", "CH", "x"].sort, @fcg.productions["E"].sort
-    #end
+    should "transform tripe-rules productions with, at maximum, two vars each" do
+      @fcg.max_last_two_vars_in_productions
+      productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x"], "F"=>"AE", "G"=>"BE", "H"=>"ED"}
+
+      assert_equal productions_expected, @fcg.productions
+    end
+
+    should "transform quintuple-rules productions with, at maximum, two vars each" do
+      @fcg.productions["E"] << "CEAD"
+      @fcg.max_last_two_vars_in_productions
+      productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x", "CI"], "F"=>"AE", "G"=>"BE", "H"=>"ED", "I" => "EJ", "J" => "AD"}
+
+      #assert_equal productions_expected.keys.sort, @fcg.vars.sort
+      assert_equal productions_expected, @fcg.productions
+    end
   end
 end
 

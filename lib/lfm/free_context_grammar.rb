@@ -21,17 +21,19 @@ class FreeContextGrammar
   
   def vars_to_the_right_in_production
     each_rule(:min => 2) do |rule|
-      rule.each_letter { |l| rule.gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l) }
+      rule.each_letter { |l| rule.gsub!(l, find_or_create_var_by_content(l)) if is_a_term?(l) }
     end
   end
 
   def max_last_two_vars_in_productions
     each_rule(:min => 3) do |rule|
-      
+      v = find_or_create_var_by_content(rule[1, rule.size])
+      rule[1, rule.size] = v
     end
   end
 
   # TODO rewrite in a Ruby way (clean code)
+  # TODO TEST!!!
   def each_rule(options = {})
     options[:min] ||= 2
 
@@ -44,15 +46,15 @@ class FreeContextGrammar
     end
   end
 
-  def find_var_by_term(q)
-    productions.each do |var, term|
-      return var if term == q
+  def find_var_by_content(q)
+    productions.each do |var, content|
+      return var if content == q
     end
     return false
   end 
 
-  def find_or_create_var_by_term(q)
-    unless v = find_var_by_term(q)
+  def find_or_create_var_by_content(q)
+    unless v = find_var_by_content(q)
       v = new_var
       productions[v] = q
     end
