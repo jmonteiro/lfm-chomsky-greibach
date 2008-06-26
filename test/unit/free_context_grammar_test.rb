@@ -1,7 +1,7 @@
 require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class FreeContextGrammarTest < Test::Unit::TestCase
-  context "The first free context grammar example" do
+  context "Simple FreeContextGrammar example" do
     setup do
       @fcg = FreeContextGrammar.new(
         ['E'],
@@ -21,12 +21,6 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     
     should "find the next letter avaliable to variable" do
       assert_equal "A", @fcg.new_var
-    end
-    
-    should "convert vars to the right side" do
-      @fcg.vars_to_the_right_side
-      assert_equal ["E", "A", "B", "C", "D"].sort, @fcg.vars.sort
-      assert_equal ["EAE", "EBE", "CED", "x"].sort, @fcg.productions["E"].sort
     end
 
     should "find the right variable for a given term" do
@@ -50,6 +44,35 @@ class FreeContextGrammarTest < Test::Unit::TestCase
       assert @fcg.is_a_term?("*")
       assert !@fcg.is_a_term?("E")
     end
+    
+    should "convert vars to the right side" do
+      @fcg.vars_to_the_right_in_production
+      assert_equal ["E", "A", "B", "C", "D"].sort, @fcg.vars.sort
+      assert_equal ["EAE", "EBE", "CED", "x"].sort, @fcg.productions["E"].sort
+    end
+  end
+
+  context "Simple FreeContextGrammar example" do
+    setup do
+      @fcg = FreeContextGrammar.new(
+        ['E', 'A', 'B', 'C', 'D'],
+        ['+', '*', '[', ']', 'x'],
+        {
+          'E' => ["EAE", "EBE", "CED", "x"],
+          'A' => ['+'],
+          'B' => ['*'],
+          'C' => ['['],
+          'D' => [']']
+        },
+        'E'
+      )
+    end
+
+    #should "convert vars to the right side" do
+    #  @fcg.max_last_two_vars_in_productions
+    #  assert_equal ["E", "A", "B", "C", "D", "F", "G", "H"].sort, @fcg.vars.sort
+    #  assert_equal ["EF", "EG", "CH", "x"].sort, @fcg.productions["E"].sort
+    #end
   end
 end
 

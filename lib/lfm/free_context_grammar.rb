@@ -19,19 +19,31 @@ class FreeContextGrammar
     end
   end
   
-  # TODO rewrite in a Ruby way (clean code, at last 10 LOC by method)
-  def vars_to_the_right_side
+  def vars_to_the_right_in_production
+    for_each_rule(:min => 2) do |rule|
+      rule.split('').each do |l|
+        rule.gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l)
+      end
+    end
+  end
+
+  def max_last_two_vars_in_productions
+    for_each_rule(:min => 3) do |rule|
+      
+    end
+  end
+
+  # TODO rewrite in a Ruby way (clean code)
+  def for_each_rule(options = {})
+    options[:min] ||= 2
+
     vars.each do |var|
       (productions[var].size - 1).times do |i|
-        if productions[var][i].size >= 2
-          productions[var][i].split('').each do |l|
-            productions[var][i].gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l)
-          end
+        if productions[var][i].size >= options[:min]
+          yield productions[var][i]
         end
       end
     end
-    
-    self
   end
 
   def find_var_by_term(q)
