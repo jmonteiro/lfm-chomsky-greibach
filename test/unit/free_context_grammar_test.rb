@@ -92,12 +92,12 @@ class FreeContextGrammarTest < Test::Unit::TestCase
       )
     end
 
-    #should "transform quintuple-rules productions with, at maximum, two vars each" do
-    #  @fcg.max_last_two_vars_in_productions
-    #  productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x", "CI"], "F"=>["AE"], "G"=>["BE"], "H"=>["ED"], "I" => ["EJ"], "J" => ["AD"]}
+    should "transform quintuple-rules productions with, at maximum, two vars each" do
+      @fcg.max_last_two_vars_in_productions
+      productions_expected = {"A"=>["+"], "B"=>["*"], "C"=>["["], "D"=>["]"], "E"=>["EF", "EG", "CH", "x", "CI"], "F"=>["AE"], "G"=>["BE"], "H"=>["ED"], "I" => ["EJ"], "J" => ["AD"]}
 
-    #  assert_equal productions_expected, @fcg.productions
-    #end
+      assert_equal productions_expected, @fcg.productions
+    end
   end
 end
 

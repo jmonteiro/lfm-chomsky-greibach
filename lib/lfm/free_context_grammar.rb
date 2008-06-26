@@ -29,6 +29,11 @@ class FreeContextGrammar
     each_rule(:min => 3) do |rule|
       v = find_or_create_var_by_content(rule[1, rule.size])
       rule[1, rule.size] = v
+      while productions[v].first.size >= 3
+        rule = productions[v].first
+        v = find_or_create_var_by_content(rule[1, rule.size])
+        rule[1, rule.size] = v
+      end
     end
   end
 
@@ -38,7 +43,7 @@ class FreeContextGrammar
     options[:min] ||= 2
 
     vars.each do |var|
-      (productions[var].size - 1).times do |i|
+      productions[var].size.times do |i|
         if productions[var][i].size >= options[:min]
           yield productions[var][i]
         end
