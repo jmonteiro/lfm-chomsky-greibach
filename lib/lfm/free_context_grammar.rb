@@ -2,14 +2,26 @@ class FreeContextGrammar
   attr_accessor :terms, :productions, :start
 
   def initialize(v, t, p, s)
-    vars = v # ['E'], é discartado pois utiliza dinamicamente com base em productions
+    vars = v # ['E'], é descartado pois conhece-as dinamicamente com base em productions
     @terms = t # ['+', '*', '[', ']', 'x']
     @productions = p # { 'E' => ["E+E", "E*E", "[E]", "x"] }
     @start = s # 'E'
   end
-
-  def start_productions
-    productions[start]
+  
+  # Simplification: Clean to direct productions
+  def clean_to_direct_productions
+    each_rule_with_var do |var, rule|
+      if rule.size == 1 && is_a_var?(rule)
+        productions[rule].each do |direct_terms|
+          productions[var] << direct_terms
+        end
+        
+        productions.delete(rule)
+        productions[var].delete(rule)
+        
+        return clean_to_direct_productions
+      end
+    end
   end
   
   # Returns the next var avaliable
@@ -20,33 +32,40 @@ class FreeContextGrammar
   end
   
   def vars_to_the_right_in_production
-    each_rule(:min => 2) do |rule|
-      rule.each_letter { |l| rule.gsub!(l, find_or_create_var_by_content(l)) if is_a_term?(l) }
+    each_rule do |rule|
+      if rule.size >= 2
+        rule.each_letter { |l| rule.gsub!(l, find_or_create_var_by_content(l)) if is_a_term?(l) }
+      end
     end
   end
 
+  # TODO rewrite in a Ruby way (clean code)
   def max_last_two_vars_in_productions
-    each_rule(:min => 3) do |rule|
-      v = find_or_create_var_by_content(rule[1, rule.size])
-      rule[1, rule.size] = v
-      while productions[v].first.size >= 3
-        rule = productions[v].first
+    each_rule do |rule|
+      if rule.size >= 3
         v = find_or_create_var_by_content(rule[1, rule.size])
         rule[1, rule.size] = v
+        return max_last_two_vars_in_productions
       end
     end
   end
 
   # TODO rewrite in a Ruby way (clean code)
   # TODO TEST!!!
-  def each_rule(options = {})
-    options[:min] ||= 2
-
+  def each_rule
     vars.each do |var|
       productions[var].size.times do |i|
-        if productions[var][i].size >= options[:min]
-          yield productions[var][i]
-        end
+        yield productions[var][i]
+      end
+    end
+  end
+  
+  # TODO rewrite in a Ruby way (clean code)
+  # TODO TEST!!!
+  def each_rule_with_var
+    vars.each do |var|
+      productions[var].size.times do |i|
+        yield var, productions[var][i]
       end
     end
   end

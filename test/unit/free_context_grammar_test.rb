@@ -1,7 +1,27 @@
 require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class FreeContextGrammarTest < Test::Unit::TestCase
-  context "Primitive FreeContextGrammar" do
+  context "Dirty FreeContextGrammar" do
+    setup do
+      @fcg = FreeContextGrammar.new(
+        ['E', 'Z', 'X'],
+        ['+', '*', '[', ']', 'x'],
+        {
+          'E' => ["E+E", "E*E", "[E]", "Z", "X"],
+          'Z' => ['x', "+"],
+          'X' => ['*']
+        },
+        'E'
+      )
+    end
+
+    should "clean to direct productions" do
+      @fcg.clean_to_direct_productions
+      assert_equal({'E' => ["E+E", "E*E", "[E]", "x", "+", "*"] }, @fcg.productions)
+    end
+  end
+  
+  context "Simplified FreeContextGrammar" do
     setup do
       @fcg = FreeContextGrammar.new(
         ['E'],
@@ -13,10 +33,6 @@ class FreeContextGrammarTest < Test::Unit::TestCase
 
     should "accept free context grammar object" do
       assert @fcg
-    end
-
-    should "get the start production" do
-      assert_equal @fcg.start_productions.sort, ["E+E", "E*E", "[E]", "x"].sort
     end
     
     should "find the next letter avaliable to variable" do
@@ -52,7 +68,7 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     end
   end
 
-  context "FreeContextGrammar after vars_to_the_right_in_productions" do
+  context "FreeContextGrammar after vars_to_the_right_in_production" do
     setup do
       @fcg = FreeContextGrammar.new(
         ['E', 'A', 'B', 'C', 'D'],
