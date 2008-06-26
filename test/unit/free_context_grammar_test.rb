@@ -25,8 +25,8 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     
     should "convert vars to the right side" do
       @fcg.vars_to_the_right_side
-      assert_equal ["E", "A", "B", "C", "D", "F"].sort, @fcg.vars.sort
-      assert_equal ["EAE", "EBE", "ECE", "DED", "F"].sort, @fcg.productions["E"].sort
+      assert_equal ["E", "A", "B", "C", "D"].sort, @fcg.vars.sort
+      assert_equal ["EAE", "EBE", "CED", "x"].sort, @fcg.productions["E"].sort
     end
 
     should "find the right variable for a given term" do

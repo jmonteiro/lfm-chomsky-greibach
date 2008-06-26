@@ -2,7 +2,7 @@ class FreeContextGrammar
   attr_accessor :terms, :productions, :start
 
   def initialize(v, t, p, s)
-    @vars = v # ['E']
+    vars = v # ['E'], é discartado pois utiliza dinamicamente com base em productions
     @terms = t # ['+', '*', '[', ']', 'x']
     @productions = p # { 'E' => ["E+E", "E*E", "[E]", "x"] }
     @start = s # 'E'
@@ -19,11 +19,14 @@ class FreeContextGrammar
     end
   end
   
+  # TODO rewrite in a Ruby way (clean code, at last 10 LOC by method)
   def vars_to_the_right_side
-    productions.each do |var, rule|
-      if rule.size <= 2
-        rule.split('').each do |l|
-          productions[var].gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l)
+    vars.each do |var|
+      (productions[var].size - 1).times do |i|
+        if productions[var][i].size >= 2
+          productions[var][i].split('').each do |l|
+            productions[var][i].gsub!(l, find_or_create_var_by_term(l)) if is_a_term?(l)
+          end
         end
       end
     end
