@@ -1,6 +1,39 @@
 require File.expand_path(File.dirname(__FILE__) + "/../test_helper")
 
 class FreeContextGrammarTest < Test::Unit::TestCase
+  context "FreeContextGrammar with empty" do
+    setup do
+      @fcg = FreeContextGrammar.new(
+        ['S', 'X', 'Y'],
+        ['a', 'b'],
+        {
+          'S' => ['aXa', 'bXb', '&'],
+          'X' => ['a', 'b', 'Y'],
+          'Y' => ['&']
+        },
+        'E'
+      )
+    end
+
+    should "know what leads direct to empty" do
+      assert_equal ['S', 'Y'].sort, @fcg.leads_direct_to_empty.sort
+    end
+
+    should "know what leads to empty" do
+      assert_equal ['S', 'X', 'Y'].sort, @fcg.leads_to_empty.sort
+    end
+
+    should "delete vars that leads direct to empty" do
+      @fcg.delete_vars_that_leads_direct_to_empty
+      assert_equal ['S', 'X'].sort, @fcg.vars.sort
+    end
+
+    should "clean empty" do
+      @fcg.clean_empty
+      assert_equal({'S' => ['aXa', 'bXb', '&', 'aa', 'bb'], 'X' => ['a', 'b', 'Y'] }, @fcg.productions)
+    end
+  end
+
   context "Dirty FreeContextGrammar" do
     setup do
       @fcg = FreeContextGrammar.new(
@@ -59,6 +92,10 @@ class FreeContextGrammarTest < Test::Unit::TestCase
     should "know if it is a term" do
       assert @fcg.is_a_term?("*")
       assert !@fcg.is_a_term?("E")
+    end
+
+    should "know what is empty" do
+      assert_equal '&', @fcg.empty 
     end
     
     should "convert vars to the right side" do

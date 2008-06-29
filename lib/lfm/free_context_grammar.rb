@@ -7,7 +7,50 @@ class FreeContextGrammar
     @productions = p # { 'E' => ["E+E", "E*E", "[E]", "x"] }
     @start = s # 'E'
   end
-  
+
+  # Simplification: Clean empty
+  def clean_empty
+    each_rule_with_var do |var, rule|
+      if !(rule == empty) && rule.size > 1
+        rule.each_letter do |l|
+          if is_a_var?(l) && leads_to_empty.include?(l)
+            productions[var] << rule.clone.gsub(l, '') 
+          end
+        end
+      end
+    end
+    delete_vars_that_leads_direct_to_empty
+  end
+
+  def leads_to_empty
+    list = []
+    each_rule_with_var do |var, rule|
+      rule.each_letter do |l|
+        if is_a_var?(l) && !list.include?(l) && leads_direct_to_empty.include?(l)
+          list << var
+        end
+      end
+    end
+    list = (list + leads_direct_to_empty).uniq
+    return list
+  end
+
+  def leads_direct_to_empty
+    list = []
+    each_rule_with_var do |var, rule|
+      if rule == empty
+        list << var unless list.include?(var)
+      end
+    end
+    return list
+  end
+
+  def delete_vars_that_leads_direct_to_empty
+    leads_direct_to_empty.each do |v|
+      productions.delete(v) if productions[v].size == 1
+    end
+  end
+
   # Simplification: Clean to direct productions
   def clean_to_direct_productions
     each_rule_with_var do |var, rule|
@@ -68,6 +111,10 @@ class FreeContextGrammar
         yield var, productions[var][i]
       end
     end
+  end
+
+  def empty
+    '&'
   end
 
   def find_var_by_content(q)

@@ -9,6 +9,7 @@ class ChomskyNormalForm < FreeContextGrammar
       chomsky = ChomskyNormalForm.new(fcg.vars, fcg.terms, fcg.productions, fcg.start)
       
       # simplifications
+      chomsky.clean_empty
       chomsky.clean_to_direct_productions
       
       chomsky.vars_to_the_right_in_production
